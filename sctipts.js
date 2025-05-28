@@ -1,40 +1,22 @@
-// Custom Cursor Effect
+// Custom Cursor Effect - только для десктопов
 const cursor = document.querySelector('.cursor-glow');
-let mouseX = 0;
-let mouseY = 0;
-let cursorX = 0;
-let cursorY = 0;
 
-// Проверяем, что элемент курсора существует
-if (cursor) {
-    // Устанавливаем начальную позицию курсора
-    cursor.style.left = '0px';
-    cursor.style.top = '0px';
+// Проверяем, что элемент курсора существует и это не тач-устройство
+const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+const isDesktop = window.matchMedia('(min-width: 1025px)').matches;
+
+if (cursor && !isTouchDevice && isDesktop) {
+    // Показываем курсор сразу
+    cursor.style.display = 'block';
+    cursor.style.opacity = '1';
     
+    // Мгновенное следование за мышью без задержек
     document.addEventListener('mousemove', (e) => {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-        
-        // Для отладки - можно удалить позже
-        // console.log('Mouse position:', mouseX, mouseY);
+        cursor.style.left = (e.clientX - 10) + 'px';
+        cursor.style.top = (e.clientY - 10) + 'px';
     });
-
-    // Smooth cursor animation
-    function animateCursor() {
-        const speed = 0.15;
-        
-        cursorX += (mouseX - cursorX) * speed;
-        cursorY += (mouseY - cursorY) * speed;
-        
-        // Центрируем курсор относительно позиции мыши
-        cursor.style.left = (cursorX - 10) + 'px';
-        cursor.style.top = (cursorY - 10) + 'px';
-        
-        requestAnimationFrame(animateCursor);
-    }
-    animateCursor();
     
-    // Скрываем курсор при выходе за пределы окна
+    // Мгновенно показываем/скрываем курсор
     document.addEventListener('mouseenter', () => {
         cursor.style.opacity = '1';
     });
@@ -42,10 +24,8 @@ if (cursor) {
     document.addEventListener('mouseleave', () => {
         cursor.style.opacity = '0';
     });
-}
-
-// Change cursor on hover
-if (cursor) {
+    
+    // Мгновенное изменение при наведении
     document.addEventListener('mouseover', (e) => {
         if (e.target.matches('a, button, .phishing-card, .quiz-option')) {
             cursor.style.transform = 'scale(1.5)';
@@ -61,7 +41,95 @@ if (cursor) {
             cursor.style.boxShadow = '0 0 20px #00d4ff';
         }
     });
+} else if (cursor) {
+    // Скрываем курсор на мобильных устройствах
+    cursor.style.display = 'none';
 }
+
+// Мобильное меню - улучшенная версия
+function initMobileMenu() {
+    const navbar = document.querySelector('.navbar');
+    const navLinks = document.querySelector('.nav-links');
+    const navContainer = navbar.querySelector('.nav-container');
+    
+    // Проверяем, существует ли уже кнопка
+    let menuButton = document.querySelector('.menu-toggle');
+    
+    if (window.innerWidth <= 480) {
+        if (!menuButton) {
+            // Создаем кнопку бургер-меню
+            menuButton = document.createElement('button');
+            menuButton.className = 'menu-toggle';
+            menuButton.innerHTML = '☰';
+            menuButton.setAttribute('aria-label', 'Toggle menu');
+            
+            navContainer.appendChild(menuButton);
+        }
+        
+        // Убираем старые обработчики событий
+        const newMenuButton = menuButton.cloneNode(true);
+        menuButton.parentNode.replaceChild(newMenuButton, menuButton);
+        menuButton = newMenuButton;
+        
+        let menuOpen = false;
+        
+        // Обработчик клика на бургер
+        menuButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            menuOpen = !menuOpen;
+            navLinks.classList.toggle('active');
+            menuButton.innerHTML = menuOpen ? '✕' : '☰';
+            
+            // Добавляем анимацию
+            if (menuOpen) {
+                navLinks.style.display = 'flex';
+                setTimeout(() => {
+                    navLinks.style.transform = 'translateY(0)';
+                }, 10);
+            } else {
+                navLinks.style.transform = 'translateY(-100%)';
+                setTimeout(() => {
+                    navLinks.style.display = 'none';
+                }, 300);
+            }
+        });
+        
+        // Закрываем меню при клике на ссылку
+        navLinks.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                menuOpen = false;
+                navLinks.classList.remove('active');
+                menuButton.innerHTML = '☰';
+                navLinks.style.transform = 'translateY(-100%)';
+                setTimeout(() => {
+                    navLinks.style.display = 'none';
+                }, 300);
+            });
+        });
+        
+        // Закрываем меню при клике вне его
+        document.addEventListener('click', (e) => {
+            if (menuOpen && !navLinks.contains(e.target) && !menuButton.contains(e.target)) {
+                menuOpen = false;
+                navLinks.classList.remove('active');
+                menuButton.innerHTML = '☰';
+                navLinks.style.transform = 'translateY(-100%)';
+                setTimeout(() => {
+                    navLinks.style.display = 'none';
+                }, 300);
+            }
+        });
+    } else if (menuButton) {
+        // Удаляем кнопку на больших экранах
+        menuButton.remove();
+        navLinks.classList.remove('active');
+        navLinks.style.display = '';
+        navLinks.style.transform = '';
+    }
+}
+
+// Инициализируем мобильное меню
+initMobileMenu();
 
 // Smooth Scrolling for Navigation
 document.querySelectorAll('.nav-link').forEach(link => {
@@ -77,9 +145,11 @@ document.querySelectorAll('.nav-link').forEach(link => {
 
 // CTA Button Click
 const ctaButton = document.querySelector('.cta-button');
-ctaButton.addEventListener('click', () => {
-    document.querySelector('#types').scrollIntoView({ behavior: 'smooth' });
-});
+if (ctaButton) {
+    ctaButton.addEventListener('click', () => {
+        document.querySelector('#types').scrollIntoView({ behavior: 'smooth' });
+    });
+}
 
 // Адаптивные анимации
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -216,12 +286,16 @@ const quizResult = document.querySelector('.quiz-result');
 
 // Initialize quiz
 function initQuiz() {
-    totalQuestionsSpan.textContent = quizData.length;
+    if (totalQuestionsSpan) {
+        totalQuestionsSpan.textContent = quizData.length;
+    }
     loadQuestion();
 }
 
 // Load question
 function loadQuestion() {
+    if (!questionElement || !optionsContainer) return;
+    
     const question = quizData[currentQuestion];
     questionElement.textContent = question.question;
     
@@ -244,6 +318,9 @@ function loadQuestion() {
 
 // Select option
 function selectOption(index) {
+    // Prevent multiple selections
+    if (selectedOption !== null) return;
+    
     // Remove previous selection
     document.querySelectorAll('.quiz-option').forEach(opt => {
         opt.classList.remove('selected', 'correct', 'incorrect');
@@ -280,6 +357,12 @@ function selectOption(index) {
 
 // Show feedback
 function showFeedback(isCorrect, explanation) {
+    // Remove existing feedback if any
+    const existingFeedback = document.querySelector('.feedback-popup');
+    if (existingFeedback) {
+        existingFeedback.remove();
+    }
+    
     const feedback = document.createElement('div');
     feedback.className = 'feedback-popup';
     feedback.style.cssText = `
@@ -312,6 +395,8 @@ function showFeedback(isCorrect, explanation) {
 
 // Update progress
 function updateProgress() {
+    if (!progressFill || !currentQuestionSpan) return;
+    
     const progress = ((currentQuestion + 1) / quizData.length) * 100;
     progressFill.style.width = `${progress}%`;
     currentQuestionSpan.textContent = currentQuestion + 1;
@@ -319,6 +404,8 @@ function updateProgress() {
 
 // Show result
 function showResult() {
+    if (!quizContent || !quizResult) return;
+    
     quizContent.style.display = 'none';
     quizResult.classList.remove('hidden');
     
@@ -328,29 +415,41 @@ function showResult() {
     
     const percentage = (score / quizData.length) * 100;
     
-    if (percentage >= 80) {
-        resultIcon.textContent = '🛡️';
-        resultTitle.textContent = 'Отлично! Вы - эксперт по безопасности!';
-        resultText.textContent = `Вы правильно ответили на ${score} из ${quizData.length} вопросов. Вы отлично разбираетесь в цифровой безопасности!`;
-    } else if (percentage >= 60) {
-        resultIcon.textContent = '🎣';
-        resultTitle.textContent = 'Хорошо! Но есть куда расти';
-        resultText.textContent = `Вы правильно ответили на ${score} из ${quizData.length} вопросов. Продолжайте изучать тему цифровой безопасности!`;
-    } else {
-        resultIcon.textContent = '🐟';
-        resultTitle.textContent = 'Будьте осторожнее!';
-        resultText.textContent = `Вы правильно ответили на ${score} из ${quizData.length} вопросов. Рекомендуем внимательнее изучить материалы о фишинге.`;
+    if (resultIcon && resultTitle && resultText) {
+        if (percentage >= 80) {
+            resultIcon.textContent = '🛡️';
+            resultTitle.textContent = 'Отлично! Вы - эксперт по безопасности!';
+            resultText.textContent = `Вы правильно ответили на ${score} из ${quizData.length} вопросов. Вы отлично разбираетесь в цифровой безопасности!`;
+        } else if (percentage >= 60) {
+            resultIcon.textContent = '🎣';
+            resultTitle.textContent = 'Хорошо! Но есть куда расти';
+            resultText.textContent = `Вы правильно ответили на ${score} из ${quizData.length} вопросов. Продолжайте изучать тему цифровой безопасности!`;
+        } else {
+            resultIcon.textContent = '🐟';
+            resultTitle.textContent = 'Будьте осторожнее!';
+            resultText.textContent = `Вы правильно ответили на ${score} из ${quizData.length} вопросов. Рекомендуем внимательнее изучить материалы о фишинге.`;
+        }
+    }
+    
+    // Добавляем обработчик события после показа результата
+    const restartButton = document.querySelector('.restart-quiz');
+    if (restartButton) {
+        restartButton.addEventListener('click', restartQuiz);
     }
 }
 
-// Restart quiz
-document.querySelector('.restart-quiz').addEventListener('click', () => {
+// Restart quiz function
+function restartQuiz() {
     currentQuestion = 0;
     score = 0;
-    quizContent.style.display = 'block';
-    quizResult.classList.add('hidden');
-    loadQuestion();
-});
+    selectedOption = null;
+    
+    if (quizContent && quizResult) {
+        quizContent.style.display = 'block';
+        quizResult.classList.add('hidden');
+        loadQuestion();
+    }
+}
 
 // Intersection Observer for animations
 const observerOptions = {
@@ -391,31 +490,30 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
-// Initialize quiz when page loads
-initQuiz();
-
 // Typing effect for hero title - адаптивная скорость
 const heroTitle = document.querySelector('.glitch-text');
-const originalText = heroTitle.textContent;
-heroTitle.textContent = '';
-let charIndex = 0;
+if (heroTitle) {
+    const originalText = heroTitle.textContent;
+    heroTitle.textContent = '';
+    let charIndex = 0;
 
-function typeText() {
-    if (charIndex < originalText.length) {
-        heroTitle.textContent += originalText[charIndex];
-        charIndex++;
-        // Более быстрая анимация на мобильных
-        const delay = window.innerWidth > 768 ? 100 : 50;
-        setTimeout(typeText, delay);
+    function typeText() {
+        if (charIndex < originalText.length) {
+            heroTitle.textContent += originalText[charIndex];
+            charIndex++;
+            // Более быстрая анимация на мобильных
+            const delay = window.innerWidth > 768 ? 100 : 50;
+            setTimeout(typeText, delay);
+        }
     }
-}
 
-// Start typing effect after page load
-window.addEventListener('load', () => {
-    // Меньшая задержка на мобильных
-    const initialDelay = window.innerWidth > 768 ? 500 : 200;
-    setTimeout(typeText, initialDelay);
-});
+    // Start typing effect after page load
+    window.addEventListener('load', () => {
+        // Меньшая задержка на мобильных
+        const initialDelay = window.innerWidth > 768 ? 500 : 200;
+        setTimeout(typeText, initialDelay);
+    });
+}
 
 // Адаптивность при изменении размера окна
 let resizeTimer;
@@ -443,6 +541,14 @@ window.addEventListener('resize', () => {
 // Add ripple effect to all buttons
 document.querySelectorAll('button').forEach(button => {
     button.addEventListener('click', function(e) {
+        // Не добавляем ripple для quiz-option, у них свой эффект
+        if (this.classList.contains('quiz-option')) return;
+        
+        const existingRipple = this.querySelector('.button-ripple');
+        if (existingRipple && !this.classList.contains('cta-button')) {
+            existingRipple.remove();
+        }
+        
         const ripple = document.createElement('span');
         ripple.className = 'button-ripple';
         this.appendChild(ripple);
@@ -458,4 +564,12 @@ document.querySelectorAll('button').forEach(button => {
         
         setTimeout(() => ripple.remove(), 600);
     });
+});
+
+// Initialize quiz when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+    // Проверяем, что все необходимые элементы существуют
+    if (questionElement && optionsContainer && progressFill && currentQuestionSpan && totalQuestionsSpan && quizContent && quizResult) {
+        initQuiz();
+    }
 });

@@ -40,7 +40,7 @@ a, button, input, textarea, select {
     position: fixed;
     pointer-events: none;
     z-index: 9999;
-    transition: all 0.1s ease;
+    transition: transform 0.1s ease, border-color 0.2s ease, box-shadow 0.2s ease;
     box-shadow: 0 0 20px var(--accent-blue);
     mix-blend-mode: difference;
 }
@@ -358,42 +358,61 @@ a, button, input, textarea, select {
     }
 }
 
-/* CTA Button */
 .cta-button {
-    background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
-    border: none;
-    padding: 1rem 2rem;
-    font-size: 1.1rem;
-    color: white;
-    border-radius: 50px;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-    transition: transform 0.3s ease;
-    animation: fadeInUp 1s ease forwards 1s;
-    opacity: 0;
+   background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+   border: none;
+   padding: 1rem 2rem;
+   font-size: 1.1rem;
+   color: white;
+   border-radius: 50px;
+   cursor: pointer;
+   position: relative;
+   overflow: hidden;
+   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+   animation: fadeInUp 1s ease forwards 1s;
+   opacity: 0;
+   box-shadow: 0 4px 15px rgba(0, 212, 255, 0.2);
 }
 
 .cta-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(0, 212, 255, 0.3);
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 
+        0 10px 30px rgba(0, 212, 255, 0.4),
+        0 0 60px rgba(0, 212, 255, 0.2),
+        inset 0 0 20px rgba(255, 255, 255, 0.1);
+}
+
+.cta-button:hover::before {
+    opacity: 0.8;
+}
+@keyframes buttonGlow {
+   0%, 100% {
+       box-shadow: 
+           0 4px 15px rgba(0, 212, 255, 0.2),
+           0 0 30px rgba(0, 212, 255, 0.1);
+   }
+   50% {
+       box-shadow: 
+           0 4px 20px rgba(0, 212, 255, 0.3),
+           0 0 40px rgba(0, 212, 255, 0.2);
+   }
 }
 
 .button-ripple {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.5);
-    transform: translate(-50%, -50%);
-    transition: width 0.6s, height 0.6s;
+   position: absolute;
+   top: 50%;
+   left: 50%;
+   width: 0;
+   height: 0;
+   border-radius: 50%;
+   background: rgba(255, 255, 255, 0.5);
+   transform: translate(-50%, -50%);
+   transition: width 0.6s, height 0.6s;
 }
 
 .cta-button:active .button-ripple {
-    width: 300px;
-    height: 300px;
+   width: 300px;
+   height: 300px;
 }
 
 @keyframes fadeInUp {
@@ -407,6 +426,15 @@ a, button, input, textarea, select {
     }
 }
 
+.cta-button .button-text {
+   position: relative;
+   z-index: 1;
+   transition: text-shadow 0.5s ease;
+}
+
+.cta-button:hover .button-text {
+   text-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+}
 /* Phishing Types Section */
 .phishing-types {
     padding: 5rem 0;
@@ -949,11 +977,10 @@ a, button, input, textarea, select {
         font-size: 1.5rem;
     }
     
-    .cta-button {
-        font-size: 1rem;
-        padding: 0.875rem 1.75rem;
-    }
-    
+
+.cta-button {
+   animation: fadeInUp 1s ease forwards 1s, buttonGlow 3s ease-in-out infinite 2s;
+}
     /* Секции */
     .phishing-types,
     .protection-section,
@@ -1182,11 +1209,17 @@ a, button, input, textarea, select {
         margin-bottom: 1.5rem;
     }
     
-    .quiz-option {
-        padding: 0.875rem;
-        font-size: 0.9rem;
-        border-radius: 8px;
-    }
+.quiz-option {
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid transparent;
+    border-radius: 10px;
+    padding: 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    color: #ffffff; /* Добавьте эту строку */
+}
     
     .quiz-option:hover {
         transform: translateX(5px);
