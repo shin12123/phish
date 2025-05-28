@@ -20,11 +20,19 @@ if (cursor) {
     });
 
     // Smooth cursor animation
- document.addEventListener('mousemove', (e) => {
-    cursor.style.left = (e.clientX - 10) + 'px';
-    cursor.style.top = (e.clientY - 10) + 'px';
-});
-
+    function animateCursor() {
+        const speed = 0.15;
+        
+        cursorX += (mouseX - cursorX) * speed;
+        cursorY += (mouseY - cursorY) * speed;
+        
+        // Центрируем курсор относительно позиции мыши
+        cursor.style.left = (cursorX - 10) + 'px';
+        cursor.style.top = (cursorY - 10) + 'px';
+        
+        requestAnimationFrame(animateCursor);
+    }
+    animateCursor();
     
     // Скрываем курсор при выходе за пределы окна
     document.addEventListener('mouseenter', () => {
@@ -73,45 +81,67 @@ ctaButton.addEventListener('click', () => {
     document.querySelector('#types').scrollIntoView({ behavior: 'smooth' });
 });
 
-// Parallax Effect on Scroll
-let lastScrollY = window.scrollY;
-const parallaxElements = document.querySelectorAll('.wave, .hero-content');
+// Адаптивные анимации
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-window.addEventListener('scroll', () => {
-    const scrollY = window.scrollY;
-    const delta = scrollY - lastScrollY;
-    
-    parallaxElements.forEach((el, index) => {
-        const speed = 0.5 + (index * 0.1);
-        const yPos = -(scrollY * speed);
-        el.style.transform = `translateY(${yPos}px)`;
+// Parallax Effect on Scroll - отключаем на мобильных
+if (window.innerWidth > 768 && !prefersReducedMotion) {
+    let lastScrollY = window.scrollY;
+    const parallaxElements = document.querySelectorAll('.wave, .hero-content');
+
+    window.addEventListener('scroll', () => {
+        const scrollY = window.scrollY;
+        
+        parallaxElements.forEach((el, index) => {
+            const speed = 0.5 + (index * 0.1);
+            const yPos = -(scrollY * speed);
+            el.style.transform = `translateY(${yPos}px)`;
+        });
+        
+        lastScrollY = scrollY;
     });
-    
-    lastScrollY = scrollY;
-});
+} else {
+    // На мобильных устройствах отключаем параллакс
+    document.querySelectorAll('.wave, .hero-content').forEach(el => {
+        el.style.transform = 'none';
+    });
+}
 
-// Card Hover Effects with Tilt
+// Card Hover Effects with Tilt - только для десктопов
 const cards = document.querySelectorAll('.phishing-card');
 
-cards.forEach(card => {
-    card.addEventListener('mousemove', (e) => {
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
+if (window.innerWidth > 768 && !isTouchDevice) {
+    cards.forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            
+            const rotateX = (y - centerY) / 10;
+            const rotateY = (centerX - x) / 10;
+            
+            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(10px)`;
+        });
         
-        const centerX = rect.width / 2;
-        const centerY = rect.height / 2;
-        
-        const rotateX = (y - centerY) / 10;
-        const rotateY = (centerX - x) / 10;
-        
-        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(10px)`;
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateZ(0)';
+        });
     });
-    
-    card.addEventListener('mouseleave', () => {
-        card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateZ(0)';
+} else {
+    // На мобильных устройствах добавляем простые тач-эффекты
+    cards.forEach(card => {
+        card.addEventListener('touchstart', () => {
+            card.style.transform = 'scale(0.98)';
+        });
+        
+        card.addEventListener('touchend', () => {
+            card.style.transform = 'scale(1)';
+        });
     });
-});
+}
 
 // Quiz Functionality
 const quizData = [
@@ -364,7 +394,7 @@ document.head.appendChild(style);
 // Initialize quiz when page loads
 initQuiz();
 
-// Typing effect for hero title
+// Typing effect for hero title - адаптивная скорость
 const heroTitle = document.querySelector('.glitch-text');
 const originalText = heroTitle.textContent;
 heroTitle.textContent = '';
@@ -374,13 +404,40 @@ function typeText() {
     if (charIndex < originalText.length) {
         heroTitle.textContent += originalText[charIndex];
         charIndex++;
-        setTimeout(typeText, 100);
+        // Более быстрая анимация на мобильных
+        const delay = window.innerWidth > 768 ? 100 : 50;
+        setTimeout(typeText, delay);
     }
 }
 
 // Start typing effect after page load
 window.addEventListener('load', () => {
-    setTimeout(typeText, 500);
+    // Меньшая задержка на мобильных
+    const initialDelay = window.innerWidth > 768 ? 500 : 200;
+    setTimeout(typeText, initialDelay);
+});
+
+// Адаптивность при изменении размера окна
+let resizeTimer;
+window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+        // Перепроверяем тип устройства при изменении размера
+        const newIsDesktop = window.matchMedia('(min-width: 1025px)').matches;
+        const newIsTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+        
+        // Обновляем видимость курсора
+        if (cursor) {
+            if (newIsDesktop && !newIsTouchDevice) {
+                cursor.style.display = 'block';
+            } else {
+                cursor.style.display = 'none';
+            }
+        }
+        
+        // Переинициализируем мобильное меню
+        initMobileMenu();
+    }, 250);
 });
 
 // Add ripple effect to all buttons

@@ -26,7 +26,12 @@ body {
     cursor: none;
 }
 
+/* Для всех интерактивных элементов тоже скрываем курсор */
+a, button, input, textarea, select {
+    cursor: none !important;
+}
 
+/* Custom Cursor */
 .cursor-glow {
     width: 20px;
     height: 20px;
@@ -37,9 +42,10 @@ body {
     z-index: 9999;
     transition: all 0.1s ease;
     box-shadow: 0 0 20px var(--accent-blue);
+    mix-blend-mode: difference;
 }
 
-
+/* Navigation */
 .navbar {
     position: fixed;
     top: 0;
@@ -170,12 +176,7 @@ body {
     text-transform: uppercase;
     position: relative;
     text-shadow: 0 0 10px var(--accent-blue);
-    animation: glitch 10s infinite;
-     text-shadow:
-        0 0 4px var(--accent-blue),
-        0 0 8px var(--accent-blue),
-        0 0 12px var(--accent-purple);
-    filter: blur(0.3px);
+    animation: glitch 2s infinite;
 }
 
 .glitch-text::before,
@@ -189,13 +190,13 @@ body {
 }
 
 .glitch-text::before {
-    animation: glitch-1 5s infinite;
+    animation: glitch-1 0.5s infinite;
     color: var(--accent-pink);
     z-index: -1;
 }
 
 .glitch-text::after {
-    animation: glitch-2 5s infinite;
+    animation: glitch-2 0.5s infinite;
     color: var(--accent-blue);
     z-index: -2;
 }
@@ -227,7 +228,6 @@ body {
     animation: fadeInUp 1s ease forwards 0.5s;
 }
 
-/* Fishing Animation - ИСПРАВЛЕННАЯ ВЕРСИЯ с одной леской */
 .fishing-animation {
     margin: 3rem 0;
     height: 200px;
@@ -280,14 +280,25 @@ body {
 }
 
 .bait {
-    display: block;
+    font-size: 2rem;
+    color: var(--accent-blue);
+    text-shadow: 0 0 20px var(--accent-blue);
     animation: pulse 1s ease infinite;
 }
 
-/* Анимация качания лески */
+@keyframes rod-swing {
+    0%, 100% { transform: rotate(-10deg); }
+    50% { transform: rotate(10deg); }
+}
+
 @keyframes line-swing {
     0%, 100% { transform: rotate(-15deg); }
     50% { transform: rotate(15deg); }
+}
+
+@keyframes hook-swing {
+    0%, 100% { transform: translateX(-50%) rotate(-20deg); }
+    50% { transform: translateX(-50%) rotate(20deg); }
 }
 
 @keyframes pulse {
@@ -852,13 +863,56 @@ body {
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
-    .glitch-text {
-        font-size: 2.5rem;
+
+/* Планшеты и мобильные устройства - отключаем кастомный курсор */
+@media (max-width: 1024px) {
+    body {
+        cursor: auto !important;
     }
     
-    .hero-subtitle {
+    .cursor-glow {
+        display: none !important;
+    }
+    
+    a, button, .phishing-card, .quiz-option, .cta-button, .restart-quiz {
+        cursor: pointer !important;
+    }
+}
+
+/* Планшеты в альбомной ориентации */
+@media (max-width: 1024px) and (orientation: landscape) {
+    .hero {
+        min-height: 100vh;
+        padding: 4rem 0;
+    }
+    
+    .glitch-text {
+        font-size: 3rem;
+    }
+    
+    .fishing-animation {
+        height: 150px;
+        margin: 2rem 0;
+    }
+}
+
+/* Планшеты в портретной ориентации */
+@media (max-width: 768px) {
+    /* Навигация */
+    .navbar {
+        padding: 0.75rem 0;
+    }
+    
+    .nav-container {
+        padding: 0 1rem;
+    }
+    
+    .logo {
         font-size: 1.2rem;
+    }
+    
+    .logo-icon {
+        font-size: 1.5rem;
     }
     
     .nav-links {
@@ -866,24 +920,397 @@ body {
         font-size: 0.9rem;
     }
     
+    /* Hero секция */
+    .hero {
+        min-height: 100vh;
+        padding-top: 80px;
+    }
+    
+    .glitch-text {
+        font-size: 2.5rem;
+        line-height: 1.2;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.2rem;
+        padding: 0 1rem;
+    }
+    
+    .fishing-animation {
+        height: 150px;
+        margin: 2rem 0;
+    }
+    
+    .fishing-line {
+        height: 120px;
+    }
+    
+    .fish {
+        font-size: 1.5rem;
+    }
+    
+    .cta-button {
+        font-size: 1rem;
+        padding: 0.875rem 1.75rem;
+    }
+    
+    /* Секции */
+    .phishing-types,
+    .protection-section,
+    .quiz-section {
+        padding: 3rem 0;
+    }
+    
+    .container {
+        padding: 0 1rem;
+    }
+    
     .section-title {
         font-size: 2rem;
+        margin-bottom: 2rem;
     }
     
+    /* Карточки */
     .cards-grid {
         grid-template-columns: 1fr;
+        gap: 1.5rem;
     }
     
+    .phishing-card {
+        padding: 1.5rem;
+    }
+    
+    .card-icon {
+        font-size: 2.5rem;
+    }
+    
+    .phishing-card h3 {
+        font-size: 1.3rem;
+    }
+    
+    /* Защита */
     .protection-grid {
         grid-template-columns: 1fr;
+        gap: 2rem;
     }
     
+    .protection-item {
+        padding: 1.5rem;
+    }
+    
+    .shield-icon {
+        width: 80px;
+        height: 80px;
+    }
+    
+    /* Квиз */
     .quiz-container {
-        padding: 2rem;
+        padding: 1.5rem;
+        margin: 0 1rem;
     }
     
     .quiz-question {
         font-size: 1.2rem;
+    }
+    
+    .quiz-option {
+        padding: 1rem;
+        font-size: 0.95rem;
+    }
+    
+    .result-icon {
+        font-size: 4rem;
+    }
+    
+    .result-title {
+        font-size: 1.5rem;
+    }
+    
+    /* Футер */
+    .footer {
+        padding: 2rem 0;
+    }
+}
+
+/* Мобильные устройства */
+@media (max-width: 480px) {
+    /* Навигация - бургер меню */
+    .nav-links {
+        display: none;
+        position: fixed;
+        top: 60px;
+        left: 0;
+        right: 0;
+        background: rgba(10, 14, 39, 0.98);
+        flex-direction: column;
+        padding: 2rem;
+        gap: 1.5rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        z-index: 999;
+        transform: translateY(-100%);
+        transition: transform 0.3s ease;
+    }
+    
+    .nav-links.active {
+        display: flex;
+        transform: translateY(0);
+    }
+    
+    /* Стили для бургер меню */
+    .menu-toggle {
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: var(--text-primary);
+        z-index: 1001;
+        background: none;
+        border: none;
+        padding: 0.5rem;
+        transition: all 0.3s ease;
+    }
+    
+    .menu-toggle:hover {
+        color: var(--accent-blue);
+    }
+    
+    /* Hero */
+    .hero {
+        padding-top: 70px;
+    }
+    
+    .hero-content {
+        padding: 0 1rem;
+    }
+    
+    .glitch-text {
+        font-size: 2rem;
+        letter-spacing: -1px;
+    }
+    
+    .hero-subtitle {
+        font-size: 1rem;
+        line-height: 1.4;
+    }
+    
+    .fishing-animation {
+        height: 120px;
+        margin: 1.5rem 0;
+    }
+    
+    .fishing-line {
+        height: 100px;
+    }
+    
+    .cta-button {
+        font-size: 0.95rem;
+        padding: 0.75rem 1.5rem;
+    }
+    
+    /* Волны */
+    .wave {
+        height: 60px;
+    }
+    
+    /* Секции */
+    .phishing-types,
+    .protection-section,
+    .quiz-section {
+        padding: 2.5rem 0;
+    }
+    
+    .section-title {
+        font-size: 1.75rem;
+        line-height: 1.3;
+        padding: 0 1rem;
+    }
+    
+    /* Карточки */
+    .phishing-card {
+        padding: 1.25rem;
+        border-radius: 15px;
+    }
+    
+    .card-icon {
+        font-size: 2rem;
+        margin-bottom: 0.75rem;
+    }
+    
+    .phishing-card h3 {
+        font-size: 1.2rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .phishing-card p {
+        font-size: 0.9rem;
+    }
+    
+    .card-hover-content {
+        padding: 1.25rem;
+        font-size: 0.9rem;
+    }
+    
+    /* Защита */
+    .protection-item {
+        padding: 1.25rem;
+    }
+    
+    .shield-icon {
+        width: 70px;
+        height: 70px;
+        margin-bottom: 1rem;
+    }
+    
+    .protection-item h3 {
+        font-size: 1.1rem;
+    }
+    
+    .protection-item p {
+        font-size: 0.9rem;
+    }
+    
+    /* Квиз */
+    .quiz-container {
+        padding: 1.25rem;
+        border-radius: 15px;
+    }
+    
+    .quiz-question {
+        font-size: 1.1rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .quiz-option {
+        padding: 0.875rem;
+        font-size: 0.9rem;
+        border-radius: 8px;
+    }
+    
+    .quiz-option:hover {
+        transform: translateX(5px);
+    }
+    
+    .progress-bar {
+        height: 4px;
+    }
+    
+    .question-counter {
+        font-size: 0.8rem;
+    }
+    
+    .result-icon {
+        font-size: 3rem;
+    }
+    
+    .result-title {
+        font-size: 1.3rem;
+    }
+    
+    .result-text {
+        font-size: 0.9rem;
+    }
+    
+    .restart-quiz {
+        font-size: 0.95rem;
+        padding: 0.75rem 1.5rem;
+    }
+    
+    /* Футер */
+    .footer {
+        padding: 1.5rem 0;
+    }
+    
+    .footer-text p {
+        font-size: 0.85rem;
+        line-height: 1.5;
+    }
+    
+    /* Пузырьки */
+    .bubble:nth-child(1) { width: 30px; height: 30px; }
+    .bubble:nth-child(2) { width: 40px; height: 40px; }
+    .bubble:nth-child(3) { width: 25px; height: 25px; }
+    .bubble:nth-child(4) { width: 35px; height: 35px; }
+    .bubble:nth-child(5) { width: 28px; height: 28px; }
+}
+
+/* Очень маленькие экраны */
+@media (max-width: 360px) {
+    .glitch-text {
+        font-size: 1.75rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 0.95rem;
+    }
+    
+    .section-title {
+        font-size: 1.5rem;
+    }
+    
+    .phishing-card {
+        padding: 1rem;
+    }
+    
+    .quiz-container {
+        padding: 1rem;
+    }
+}
+
+/* Адаптив для больших экранов */
+@media (min-width: 1440px) {
+    .container {
+        max-width: 1320px;
+    }
+    
+    .glitch-text {
+        font-size: 5rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.75rem;
+    }
+    
+    .section-title {
+        font-size: 3.5rem;
+    }
+}
+
+/* Ориентация и специальные случаи */
+@media (max-width: 768px) and (orientation: landscape) {
+    .hero {
+        min-height: auto;
+        padding: 3rem 0;
+    }
+    
+    .fishing-animation {
+        display: none;
+    }
+    
+    .glitch-text {
+        font-size: 2rem;
+    }
+}
+
+/* Высокие экраны (iPhone X и выше) */
+@media (min-height: 812px) and (max-width: 480px) {
+    .hero {
+        min-height: 85vh;
+    }
+}
+
+/* Доступность - уменьшение анимаций для пользователей с такими настройками */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    
+    .glitch-text::before,
+    .glitch-text::after {
+        display: none;
     }
 }
 
@@ -930,12 +1357,4 @@ html {
 
 ::-webkit-scrollbar-thumb:hover {
     background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
-}
-
-a, button, .phishing-card, .quiz-option, .cta-button, .restart-quiz {
-    cursor: none !important;
-}
-.quiz-option,
-.quiz-option * {
-    color: #ffffff !important;
 }
