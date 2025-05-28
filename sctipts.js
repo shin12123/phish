@@ -47,7 +47,86 @@ if (cursor && !isTouchDevice && isDesktop) {
 }
 
 // Мобильное меню - улучшенная версия
-
+function initMobileMenu() {
+    const navbar = document.querySelector('.navbar');
+    const navLinks = document.querySelector('.nav-links');
+    const navContainer = navbar.querySelector('.nav-container');
+    
+    // Проверяем, существует ли уже кнопка
+    let menuButton = document.querySelector('.menu-toggle');
+    
+    if (window.innerWidth <= 480) {
+        if (!menuButton) {
+            // Создаем кнопку бургер-меню
+            menuButton = document.createElement('button');
+            menuButton.className = 'menu-toggle';
+            menuButton.innerHTML = '☰';
+            menuButton.setAttribute('aria-label', 'Toggle menu');
+            
+            navContainer.appendChild(menuButton);
+        }
+        
+        // Убираем старые обработчики событий
+        const newMenuButton = menuButton.cloneNode(true);
+        menuButton.parentNode.replaceChild(newMenuButton, menuButton);
+        menuButton = newMenuButton;
+        
+        let menuOpen = false;
+        
+        // Обработчик клика на бургер
+        menuButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            menuOpen = !menuOpen;
+            navLinks.classList.toggle('active');
+            menuButton.innerHTML = menuOpen ? '✕' : '☰';
+            
+            // Добавляем анимацию
+            if (menuOpen) {
+                navLinks.style.display = 'flex';
+                setTimeout(() => {
+                    navLinks.style.transform = 'translateY(0)';
+                }, 10);
+            } else {
+                navLinks.style.transform = 'translateY(-100%)';
+                setTimeout(() => {
+                    navLinks.style.display = 'none';
+                }, 300);
+            }
+        });
+        
+        // Закрываем меню при клике на ссылку
+        navLinks.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                menuOpen = false;
+                navLinks.classList.remove('active');
+                menuButton.innerHTML = '☰';
+                navLinks.style.transform = 'translateY(-100%)';
+                setTimeout(() => {
+                    navLinks.style.display = 'none';
+                }, 300);
+            });
+        });
+        
+        // Закрываем меню при клике вне его
+        document.addEventListener('click', (e) => {
+            if (menuOpen && !navLinks.contains(e.target) && !menuButton.contains(e.target)) {
+                menuOpen = false;
+                navLinks.classList.remove('active');
+                menuButton.innerHTML = '☰';
+                navLinks.style.transform = 'translateY(-100%)';
+                setTimeout(() => {
+                    navLinks.style.display = 'none';
+                }, 300);
+            }
+        });
+    } else if (menuButton) {
+        // Удаляем кнопку на больших экранах
+        menuButton.remove();
+        navLinks.classList.remove('active');
+        navLinks.style.display = '';
+        navLinks.style.transform = '';
+    }
+}
 
 // Инициализируем мобильное меню
 initMobileMenu();

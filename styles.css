@@ -1084,21 +1084,9 @@ a, button, input, textarea, select {
     }
     
     /* Стили для бургер меню */
-    .menu-toggle {
-        position: absolute;
-        right: 1rem;
-        top: 50%;
-        transform: translateY(-50%);
-        font-size: 1.5rem;
-        cursor: pointer;
-        color: var(--text-primary);
-        z-index: 1001;
-        background: none;
-        border: none;
-        padding: 0.5rem;
-        transition: all 0.3s ease;
-    }
-    
+  .menu-toggle {
+    display: none;
+}
     .menu-toggle:hover {
         color: var(--accent-blue);
     }
