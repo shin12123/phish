@@ -176,7 +176,7 @@ a, button, input, textarea, select {
     text-transform: uppercase;
     position: relative;
     text-shadow: 0 0 10px var(--accent-blue);
-    animation: glitch 2s infinite;
+    animation: glitch 3s infinite;
 }
 
 .glitch-text::before,
@@ -190,13 +190,13 @@ a, button, input, textarea, select {
 }
 
 .glitch-text::before {
-    animation: glitch-1 0.5s infinite;
+    animation: glitch-1 3s infinite;
     color: var(--accent-pink);
     z-index: -1;
 }
 
 .glitch-text::after {
-    animation: glitch-2 0.5s infinite;
+    animation: glitch-2 3s infinite;
     color: var(--accent-blue);
     z-index: -2;
 }
