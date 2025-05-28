@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phishing: Не клюйте на крючок</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="cursor-glow"></div>
+    
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <span class="logo-icon">🎣</span>
+                <span class="logo-text">PhishGuard</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#home" class="nav-link">Главная</a></li>
+                <li><a href="#types" class="nav-link">Виды фишинга</a></li>
+                <li><a href="#protection" class="nav-link">Защита</a></li>
+                <li><a href="#quiz" class="nav-link">Тест</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section id="home" class="hero">
+        <div class="water-bg">
+            <div class="wave wave1"></div>
+            <div class="wave wave2"></div>
+            <div class="wave wave3"></div>
+        </div>
+        
+        <div class="hero-content">
+            <h1 class="glitch-text" data-text="Не клюйте на крючок">Не клюйте на крючок</h1>
+            <p class="hero-subtitle">Узнайте, как не стать жертвой цифровой рыбалки</p>
+            
+            <div class="fishing-animation">
+                <div class="fishing-rod"></div>
+                <div class="fishing-line"></div>
+                <div class="hook">
+                    <span class="bait">@</span>
+                </div>
+                <div class="fish-container">
+                    <div class="fish fish1">🐟</div>
+                    <div class="fish fish2">🐠</div>
+                    <div class="fish fish3">🐡</div>
+                </div>
+            </div>
+            
+            <button class="cta-button">
+                <span class="button-text">Погрузиться глубже</span>
+                <span class="button-ripple"></span>
+            </button>
+        </div>
+    </section>
+
+    <section id="types" class="phishing-types">
+        <div class="container">
+            <h2 class="section-title">Виды цифровой "рыбалки"</h2>
+            
+            <div class="cards-grid">
+                <div class="phishing-card" data-type="email">
+                    <div class="card-icon">📧</div>
+                    <h3>Email Фишинг</h3>
+                    <p>Поддельные письма от "банков" и "служб поддержки"</p>
+                    <div class="card-hover-content">
+                        <ul>
+                            <li>Проверяйте адрес отправителя</li>
+                            <li>Не переходите по подозрительным ссылкам</li>
+                            <li>Ищите грамматические ошибки</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="phishing-card" data-type="sms">
+                    <div class="card-icon">📱</div>
+                    <h3>SMS Фишинг</h3>
+                    <p>Мошеннические СМС с "выигрышами" и "блокировками"</p>
+                    <div class="card-hover-content">
+                        <ul>
+                            <li>Банки не запрашивают данные по СМС</li>
+                            <li>Игнорируйте срочные угрозы</li>
+                            <li>Проверяйте номер отправителя</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="phishing-card" data-type="social">
+                    <div class="card-icon">💬</div>
+                    <h3>Социальный фишинг</h3>
+                    <p>Фейковые профили и мошенничество в соцсетях</p>
+                    <div class="card-hover-content">
+                        <ul>
+                            <li>Проверяйте подлинность профилей</li>
+                            <li>Не делитесь личными данными</li>
+                            <li>Остерегайтесь слишком хороших предложений</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="phishing-card" data-type="spear">
+                    <div class="card-icon">🎯</div>
+                    <h3>Целевой фишинг</h3>
+                    <p>Персонализированные атаки на конкретных людей</p>
+                    <div class="card-hover-content">
+                        <ul>
+                            <li>Будьте осторожны с персональными письмами</li>
+                            <li>Проверяйте запросы даже от "коллег"</li>
+                            <li>Используйте двухфакторную аутентификацию</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="protection" class="protection-section">
+        <div class="container">
+            <h2 class="section-title">Защитите себя от крючка</h2>
+            
+            <div class="protection-grid">
+                <div class="protection-item">
+                    <div class="shield-icon">
+                        <svg viewBox="0 0 100 100" class="shield">
+                            <path d="M50 5 L80 20 L80 60 Q80 85 50 95 Q20 85 20 60 L20 20 Z" />
+                            <text x="50" y="55" text-anchor="middle" class="shield-text">2FA</text>
+                        </svg>
+                    </div>
+                    <h3>Двухфакторная аутентификация</h3>
+                    <p>Дополнительный уровень защиты ваших аккаунтов</p>
+                </div>
+                
+                <div class="protection-item">
+                    <div class="shield-icon">
+                        <svg viewBox="0 0 100 100" class="shield">
+                            <path d="M50 5 L80 20 L80 60 Q80 85 50 95 Q20 85 20 60 L20 20 Z" />
+                            <text x="50" y="55" text-anchor="middle" class="shield-text">🔍</text>
+                        </svg>
+                    </div>
+                    <h3>Проверяйте URL</h3>
+                    <p>Всегда смотрите на адресную строку перед вводом данных</p>
+                </div>
+                
+                <div class="protection-item">
+                    <div class="shield-icon">
+                        <svg viewBox="0 0 100 100" class="shield">
+                            <path d="M50 5 L80 20 L80 60 Q80 85 50 95 Q20 85 20 60 L20 20 Z" />
+                            <text x="50" y="55" text-anchor="middle" class="shield-text">🚫</text>
+                        </svg>
+                    </div>
+                    <h3>Не спешите</h3>
+                    <p>Мошенники создают ощущение срочности. Остановитесь и подумайте</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="quiz" class="quiz-section">
+        <div class="container">
+            <h2 class="section-title">Проверьте свои знания</h2>
+            
+            <div class="quiz-container">
+                <div class="quiz-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill"></div>
+                    </div>
+                    <span class="question-counter">Вопрос <span id="current-question">1</span> из <span id="total-questions">5</span></span>
+                </div>
+                
+                <div class="quiz-content">
+                    <h3 class="quiz-question">Загрузка вопроса...</h3>
+                    <div class="quiz-options">
+                        <!-- Опции будут добавлены через JS -->
+                    </div>
+                </div>
+                
+                <div class="quiz-result hidden">
+                    <div class="result-icon"></div>
+                    <h3 class="result-title"></h3>
+                    <p class="result-text"></p>
+                    <button class="restart-quiz">Пройти ещё раз</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-text">
+                    <p>© 2025 PhishGuard. Не дайте себя поймать на крючок!</p>
+                    <p class="footer-joke">Помните: единственная рыбалка, которая вам нужна - это настоящая 🎣</p>
+                </div>
+                <div class="bubbles">
+                    <div class="bubble"></div>
+                    <div class="bubble"></div>
+                    <div class="bubble"></div>
+                    <div class="bubble"></div>
+                    <div class="bubble"></div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+ <script src="sctipts.js"></script>
+</body>
+</html>
